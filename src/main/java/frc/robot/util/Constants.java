@@ -29,6 +29,13 @@ public final class Constants {
         private static final double DRIVE_REDUCTION = 0.01;//(14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0);  Gear Reduction of the Driving Motors [Wheel Revolution / Motor Revolution]
         private static final double STEER_REDUCTION = (7.0 / 150.0); // Gear Reduction of the Steering Motors [Wheel Revolution / Motor Revolution]
 
+        private static final double FAST_DRIVE_REDUCTION = 0.25;
+        //private static final double FAST_STEER_REDUCTION = 0.1;
+
+        //private static final double FAST_STEER_SPEED = FREE_SPEED * FAST_STEER_REDUCTION * (WHEEL_DIAMETER * Math.PI) / 60.0;
+        public static final double FAST_DRIVE_SPEED = FREE_SPEED * FAST_DRIVE_REDUCTION * (2 * Math.PI) / 60.0;
+
+
         public static final double MAX_DRIVE_SPEED = FREE_SPEED * DRIVE_REDUCTION * (WHEEL_DIAMETER * Math.PI) / 60.0; // Maximum Driving Speed [m / s]
         public static final double MAX_STEER_SPEED = FREE_SPEED * STEER_REDUCTION * (2 * Math.PI) / 60.0; // Maximum Steering Speed [rad / s]
     

@@ -5,6 +5,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.lib.Controller;
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.Constants;
 import swervelib.math.SwerveMath;
@@ -14,6 +15,8 @@ public class Drive extends Command {
     private final Swerve swerve;
     private final DoubleSupplier vx, vy;
     private final DoubleSupplier omega, headingLock;
+
+    public Controller controller = new Controller(0);
 
     public Drive (Swerve swerve, DoubleSupplier vx, DoubleSupplier vy, DoubleSupplier omega, DoubleSupplier headingLock) {
 
@@ -76,9 +79,14 @@ public class Drive extends Command {
             this.swerve.driveHeadingLock(translation, new Rotation2d(headingX, headingY));
             return;
         }
-
-        double omega = -this.omega.getAsDouble() * Constants.SwerveConstants.TURN_CONSTANT * Constants.SwerveConstants.MAX_STEER_SPEED;        
-        this.swerve.driveAngularVelocity(translation.times(Constants.SwerveConstants.MAX_DRIVE_SPEED), omega);
+        if(controller.getRightTriggerAxis() < 0.2) {
+            double omega = -this.omega.getAsDouble() * Constants.SwerveConstants.TURN_CONSTANT * Constants.SwerveConstants.MAX_STEER_SPEED;        
+            this.swerve.driveAngularVelocity(translation.times(Constants.SwerveConstants.MAX_DRIVE_SPEED), omega);
+        } else {
+            double omega = -this.omega.getAsDouble() * Constants.SwerveConstants.TURN_CONSTANT * Constants.SwerveConstants.MAX_STEER_SPEED;        
+            this.swerve.driveAngularVelocity(translation.times(Constants.SwerveConstants.FAST_DRIVE_SPEED), omega);
+        }
+        
     }
 
     @Override

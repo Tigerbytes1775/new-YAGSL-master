@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.revrobotics.CANSparkMax;
+//import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -8,6 +9,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.motorcontrol.PWMVictorSPX;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,22 +34,34 @@ public class Robot extends TimedRobot {
 
 	// PIVOT code
 	private final CANSparkMax pivotMotor = new CANSparkMax(23, MotorType.kBrushless);
+	private final PWMVictorSPX intakeMotor = new PWMVictorSPX(9);
+	private final PWMVictorSPX launchMotor1 = new PWMVictorSPX(0);
+	private final PWMVictorSPX launchMotor2 = new PWMVictorSPX(1);
 
 	private final double pivotOutput = 0.25;
 	private final int pivotLimit = 20;
 
+	private final double intakeOutput = 1;
+
+	private final double launchPowerReduction = 0.5;
 	//function to set the arm output power in the vertical direction
-	public void setArmYAxisMotor(double percent) {
-		System.out.println("Setting percent to pivotMotor");
+	public void setPivotMotor(double percent) {
 		pivotMotor.set(percent);
-		SmartDashboard.putNumber("armYAxis power(%)", percent);
+		SmartDashboard.putNumber("Pivot power(%)", percent);
 	}
 
 	//function to set the arm output power in the horizontal direction
-	// public void setArmXAxisMotor(double percent) {
-	// 	armXAxis.set(percent);
-	// 	SmartDashboard.putNumber("armXaxis power(%)", percent);
-	// }
+	public void setIntakeMotor(double percent) {
+		intakeMotor.set(percent);
+		SmartDashboard.putNumber("Intake power(%)", percent);
+	}
+
+	public void setLaunchMotor(double percent) {
+		launchMotor1.set(percent);
+		launchMotor2.set(percent);
+		SmartDashboard.putNumber("Launch power(%)", percent);
+	
+	}
 	/**
 	 * This function is run when the robot is first started up and should be used for any
 	 * initialization code.
@@ -64,6 +78,9 @@ public class Robot extends TimedRobot {
 		// limit the direction of the arm's rotations (kReverse = up)
 		pivotMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
 		pivotMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
+
+		intakeMotor.setInverted(false);
+
 
 		// if bug with directly below, ignore and build
 		if (BuildConstants.DIRTY == 1) { Alerts.versionControl.set(true); }
@@ -100,54 +117,53 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic () {
 		//Code for the arm
-		double pivotPower;
+		double intakePower;
 
-		// // motion for the arm in the horizontal direction
-		// if (pivotMotor.getLeftTriggerAxis() > 0.5) {
-		// //extend the arm
-		// // we could set it to srmpower = armXOuptuPower x get left trigger axis ( test it on the pivot firs)
-		// pivotPower = ArmXOutputPower;
-		// //*pivotMotor.getLeftTriggerAxis();
-		// }
-		// else if (pivotMotor.getRightTriggerAxis() > 0.5) {
+		// motion for the arm in the horizontal direction
+		if (commandsController.getLeftTriggerAxis() > 0.5) {
+		//extend the arm
+		// we could set it to srmpower = armXOuptuPower x get left trigger axis ( test it on the pivot firs)
+		intakePower = intakeOutput;
+
+		 }
+		 else if (commandsController.getRightTriggerAxis() > 0.5) {
 		// //retract the arm
-		// pivotPower = -ArmXOutputPower;
-		// //*pivotMotor.getRightTriggerAxis();
-		// }
-		// else {
-		// // do nothing and let it sit where it is
-		// pivotPower = 0.0;
-		// //armXAxis.stopMotor();
-		// armXAxis.setNeutralMode(NeutralMode.Brake);
-		// }
-		// setArmXAxisMotor(pivotPower);
+		intakePower = -intakeOutput;
 
+		 }
+		 else {
+		 // do nothing and let it sit where it is
+			intakePower = 0.0;
+			intakeMotor.stopMotor();
+		 //intakeMotor.setNeutralMode(NeutralMode.Brake);
+		 }
+		setIntakeMotor(intakePower);
 
+		double pivotPower;
 		// motion for the arm in the vertical direction
 		if (commandsController.getLeftY() > 0.5) {
 			//raise the arm
-			System.out.println("raising pivot");
+			
 			pivotPower = pivotOutput;
-			//*pivotMotor.getLeftY();
+
 		}
 		else if (commandsController.getLeftY() < -0.5) {
 			//lower the arm
-			System.out.println("lowering pivot");
 			pivotPower = -pivotOutput;
-			//*pivotMotor.getLeftY();
+
 		}
 		else {
 			//do nothing and let it sit where it is
-			System.out.println("Doing nothing to pivot");
+			
 			pivotPower = 0.0;
-			pivotMotor.setIdleMode(IdleMode. kBrake);
+			pivotMotor.setIdleMode(IdleMode.kBrake);
 		}
-		setArmYAxisMotor(pivotPower);
+		setPivotMotor(pivotPower);
+		System.out.println(pivotMotor.getAbsoluteEncoder());
 		// Cancels all running commands at the start of test mode.
-		// double rollerPower;
-		// rollerPower = driverController.getLeftY() * 0.5;
-		// TopMotor.set(rollerPower);
-		// BottomMotor.set(rollerPower);
+		double rollerPower;
+		rollerPower = commandsController.getLeftY() * launchPowerReduction;
+		setLaunchMotor(rollerPower);
 	}
 
 	@Override
