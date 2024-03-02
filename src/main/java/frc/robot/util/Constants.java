@@ -39,8 +39,8 @@ public final class Constants {
         public static final double MAX_DRIVE_SPEED = FREE_SPEED * DRIVE_REDUCTION * (WHEEL_DIAMETER * Math.PI) / 60.0; // Maximum Driving Speed [m / s]
         public static final double MAX_STEER_SPEED = FREE_SPEED * STEER_REDUCTION * (2 * Math.PI) / 60.0; // Maximum Steering Speed [rad / s]
     
-        public static final double TRANSLATION_DEADBAND = 0.0825; // Joystick Deadband [%]
-        public static final double OMEGA_DEADBAND = 0.125; // Joystick Deadband [%]
+        public static final double TRANSLATION_DEADBAND = 0.5; // Joystick Deadband [%]
+        public static final double OMEGA_DEADBAND = 0.5; // Joystick Deadband [%]
 
         public static final double TURN_CONSTANT = 0.125; // Turning Power [%]
         public static final double LOCK_TIME = 10.0; // Lock Time While Disabled [s]
