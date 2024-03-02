@@ -26,8 +26,8 @@ public final class Constants {
         private static final int FREE_SPEED = 5676; // Motor Free Speed [RPM]
         private static final double WHEEL_DIAMETER = 0.10033; // Diameter of the Wheel [m]
 
-        private static final double DRIVE_REDUCTION = 0.01;//(14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0);  Gear Reduction of the Driving Motors [Wheel Revolution / Motor Revolution]
-        private static final double STEER_REDUCTION = (7.0 / 150.0); // Gear Reduction of the Steering Motors [Wheel Revolution / Motor Revolution]
+        private static final double DRIVE_REDUCTION = 0.08;//(14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0);//  Gear Reduction of the Driving Motors [Wheel Revolution / Motor Revolution]
+        private static final double STEER_REDUCTION = 0.04;//(7.0 / 150.0); // Gear Reduction of the Steering Motors [Wheel Revolution / Motor Revolution]
 
         private static final double FAST_DRIVE_REDUCTION = 0.25;
         //private static final double FAST_STEER_REDUCTION = 0.1;
@@ -65,6 +65,19 @@ public final class Constants {
 
         //8
         public static final double ANGLE_SYSID_QUASISTATIC_TIMEOUT = 0.1;
-        public static final double ANGLE_SYSID_DYNAMIC_TIMEOUT = 3.0;
+         public static final double ANGLE_SYSID_DYNAMIC_TIMEOUT = 3.0;
+         
+         /* // NEED TO BE FIXED for Auto tune PID values for auto path on path planner source:youtube geoffschmit pathplanner2023Overveiw i just copied and paste<<<
+         public static final double AUTO_DRIVE_P_CONTROLLER = 6.0;
+         public static final double AUTO_DRIVE_I_CONTROLLER = 0.0;
+         public static final double AUTO_DRIVE_D_CONTROLLER = 0.0;
+         public static final double AUTO_TURN_P_CONTROLLER = 10.0;
+         public static final double AUTO_TURN_I_CONTROLLER = 0.0;
+         public static final double AUTO_TURN_D_CONTROLLER = 0.0;
+
+         public static final HashMap<String, Command> AUTO_EVENT_MAP = new HashMap();
+        
+         public static final double DEADBAND = 0.1;
+       } */
     }
 }

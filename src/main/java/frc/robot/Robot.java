@@ -35,15 +35,17 @@ public class Robot extends TimedRobot {
 	// PIVOT code
 	private final CANSparkMax pivotMotor = new CANSparkMax(23, MotorType.kBrushless);
 	private final PWMVictorSPX intakeMotor = new PWMVictorSPX(9);
-	private final PWMVictorSPX launchMotor1 = new PWMVictorSPX(0);
-	private final PWMVictorSPX launchMotor2 = new PWMVictorSPX(1);
+	private final PWMVictorSPX launchMotor1 = new PWMVictorSPX(8);
+	private final PWMVictorSPX launchMotor2 = new PWMVictorSPX(7);
 
 	private final double pivotOutput = 0.25;
 	private final int pivotLimit = 20;
 
-	private final double intakeOutput = 1;
+	private final double intakeOutput = 0.75;
 
-	private final double launchPowerReduction = 0.5;
+	private final double launchPower = 1;
+	public boolean launchOn = false;
+
 	//function to set the arm output power in the vertical direction
 	public void setPivotMotor(double percent) {
 		pivotMotor.set(percent);
@@ -58,7 +60,7 @@ public class Robot extends TimedRobot {
 
 	public void setLaunchMotor(double percent) {
 		launchMotor1.set(percent);
-		launchMotor2.set(percent);
+		launchMotor2.set(-percent);
 		SmartDashboard.putNumber("Launch power(%)", percent);
 	
 	}
@@ -125,20 +127,18 @@ public class Robot extends TimedRobot {
 		// we could set it to srmpower = armXOuptuPower x get left trigger axis ( test it on the pivot firs)
 		intakePower = intakeOutput;
 
-		 }
-		 else if (commandsController.getRightTriggerAxis() > 0.5) {
+		 } else if (commandsController.getRightTriggerAxis() > 0.5) {
 		// //retract the arm
 		intakePower = -intakeOutput;
 
-		 }
-		 else {
+		 } else {
 		 // do nothing and let it sit where it is
 			intakePower = 0.0;
 			intakeMotor.stopMotor();
 		 //intakeMotor.setNeutralMode(NeutralMode.Brake);
 		 }
-		setIntakeMotor(intakePower);
-
+		//setIntakeMotor(intakePower);
+		 intakeMotor.set(intakePower);
 		double pivotPower;
 		// motion for the arm in the vertical direction
 		if (commandsController.getLeftY() > 0.5) {
@@ -146,13 +146,11 @@ public class Robot extends TimedRobot {
 			
 			pivotPower = pivotOutput;
 
-		}
-		else if (commandsController.getLeftY() < -0.5) {
+		} else if (commandsController.getLeftY() < -0.5) {
 			//lower the arm
 			pivotPower = -pivotOutput;
 
-		}
-		else {
+		} else {
 			//do nothing and let it sit where it is
 			
 			pivotPower = 0.0;
@@ -161,9 +159,25 @@ public class Robot extends TimedRobot {
 		setPivotMotor(pivotPower);
 		System.out.println(pivotMotor.getAbsoluteEncoder());
 		// Cancels all running commands at the start of test mode.
+		
 		double rollerPower;
-		rollerPower = commandsController.getLeftY() * launchPowerReduction;
+		if(commandsController.getAButtonReleased()) {
+			if(launchOn) {
+				launchOn = false;
+			} else {
+				launchOn = true;
+			}
+		} 
+
+		if(launchOn == true) {
+			rollerPower = launchPower;
+		} else {
+			rollerPower = 0;
+			launchMotor1.stopMotor();
+			launchMotor2.stopMotor();
+		}
 		setLaunchMotor(rollerPower);
+		
 	}
 
 	@Override
