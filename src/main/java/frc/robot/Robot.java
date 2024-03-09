@@ -14,9 +14,11 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Swerve;
 import frc.robot.util.Alerts;
 import frc.robot.util.BuildConstants;
 import frc.robot.util.Constants;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -38,14 +40,18 @@ public class Robot extends TimedRobot {
 	private final PWMVictorSPX launchMotor1 = new PWMVictorSPX(8);
 	private final PWMVictorSPX launchMotor2 = new PWMVictorSPX(7);
 
-	private final double pivotOutput = 0.25;
+	private final double pivotOutput = 0.5;
 	private final int pivotLimit = 20;
 
 	private final double intakeOutput = 0.75;
 
-	private final double launchPower = 1;
+	private final double speakerPower = 1;
+	private final double ampPower = 0.7;
+	private double rollerPower = 0;
 	public boolean launchOn = false;
 
+
+ 
 	//function to set the arm output power in the vertical direction
 	public void setPivotMotor(double percent) {
 		pivotMotor.set(percent);
@@ -144,11 +150,11 @@ public class Robot extends TimedRobot {
 		if (commandsController.getLeftY() > 0.5) {
 			//raise the arm
 			
-			pivotPower = pivotOutput;
+			pivotPower = -pivotOutput;
 
 		} else if (commandsController.getLeftY() < -0.5) {
 			//lower the arm
-			pivotPower = -pivotOutput;
+			pivotPower = pivotOutput;
 
 		} else {
 			//do nothing and let it sit where it is
@@ -160,24 +166,38 @@ public class Robot extends TimedRobot {
 		System.out.println(pivotMotor.getAbsoluteEncoder());
 		// Cancels all running commands at the start of test mode.
 		
-		double rollerPower;
+		
 		if(commandsController.getAButtonReleased()) {
+			rollerPower = speakerPower;
 			if(launchOn) {
 				launchOn = false;
 			} else {
 				launchOn = true;
 			}
 		} 
+		if(commandsController.getBButtonReleased()) {
+			rollerPower = ampPower;
+			if(launchOn) {
+				launchOn = false;
+			} else {
+				launchOn = true;
+			}
+		}
 
-		if(launchOn == true) {
-			rollerPower = launchPower;
-		} else {
+		if(!launchOn) {
 			rollerPower = 0;
 			launchMotor1.stopMotor();
 			launchMotor2.stopMotor();
-		}
+		} 
 		setLaunchMotor(rollerPower);
+	
 		
+		
+
+		/*if() {
+			
+		}*/
+
 	}
 
 	@Override

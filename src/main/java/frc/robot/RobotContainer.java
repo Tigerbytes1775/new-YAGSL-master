@@ -33,15 +33,16 @@ public class RobotContainer {
     }
 
            //NEED FIX FOR AUTO (prolly not even java land copy past from youtube source geoffsmchit pathplanner2023Overveiw) not done leave early bye bye
-    private void configureAutoCommands(){
+    //private void configureAutoCommands(){
              //AUTO_EVENT_MAP.put("event1", new PrintCommand("passed marker 1"));
 
-    }     
+    //}     
 
 
 
 
     private void configureCommands () {
+
 
         this.swerve.setDefaultCommand(new Drive(
             this.swerve, 
