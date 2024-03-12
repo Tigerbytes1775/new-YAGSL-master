@@ -42,15 +42,16 @@ public class RobotContainer {
 
 
     private void configureCommands () {
-
-
-        this.swerve.setDefaultCommand(new Drive(
-            this.swerve, 
-            () -> MathUtil.applyDeadband(-this.driverOne.getHID().getLeftY(), Constants.SwerveConstants.TRANSLATION_DEADBAND),
-            () -> MathUtil.applyDeadband(-this.driverOne.getHID().getLeftX(), Constants.SwerveConstants.TRANSLATION_DEADBAND), 
-            () -> MathUtil.applyDeadband(this.driverOne.getHID().getRightX(), Constants.SwerveConstants.OMEGA_DEADBAND), 
-            () -> this.driverOne.getHID().getPOV()
+       
+            this.swerve.setDefaultCommand(new Drive(
+                this.swerve, 
+                () -> MathUtil.applyDeadband(-this.driverOne.getHID().getLeftY(), Constants.SwerveConstants.TRANSLATION_DEADBAND),
+                () -> MathUtil.applyDeadband(-this.driverOne.getHID().getLeftX(), Constants.SwerveConstants.TRANSLATION_DEADBAND), 
+                () -> MathUtil.applyDeadband(this.driverOne.getHID().getRightX(), Constants.SwerveConstants.OMEGA_DEADBAND), 
+                () -> this.driverOne.getHID().getPOV()
         ));
+        
+        
 
         this.limelight.setDefaultCommand(new TrackAprilTags(this.swerve, this.limelight));
 

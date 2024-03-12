@@ -18,6 +18,8 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.util.Alerts;
 import frc.robot.util.BuildConstants;
 import frc.robot.util.Constants;
+import java.lang.Math;
+
 
 
 /**
@@ -40,13 +42,14 @@ public class Robot extends TimedRobot {
 	private final PWMVictorSPX launchMotor1 = new PWMVictorSPX(8);
 	private final PWMVictorSPX launchMotor2 = new PWMVictorSPX(7);
 
-	private final double pivotOutput = 0.5;
+	private final double pivotOutput = 0.35;
 	private final int pivotLimit = 20;
 
 	private final double intakeOutput = 0.75;
 
 	private final double speakerPower = 1;
 	private final double ampPower = 0.7;
+	private final double reversePower = 0.05;
 	private double rollerPower = 0;
 	public boolean launchOn = false;
 
@@ -145,8 +148,9 @@ public class Robot extends TimedRobot {
 		 }
 		//setIntakeMotor(intakePower);
 		 intakeMotor.set(intakePower);
-		double pivotPower;
-		// motion for the arm in the vertical direction
+
+		double pivotPower = 0;
+		/*// motion for the arm in the vertical direction
 		if (commandsController.getLeftY() > 0.5) {
 			//raise the arm
 			
@@ -161,7 +165,13 @@ public class Robot extends TimedRobot {
 			
 			pivotPower = 0.0;
 			pivotMotor.setIdleMode(IdleMode.kBrake);
+		}*/
+		if(Math.abs(commandsController.getLeftY()) > 0.2) {
+			pivotPower = commandsController.getLeftY() * pivotOutput;
+		} else {
+			pivotMotor.stopMotor();
 		}
+	 	
 		setPivotMotor(pivotPower);
 		System.out.println(pivotMotor.getAbsoluteEncoder());
 		// Cancels all running commands at the start of test mode.
@@ -174,8 +184,7 @@ public class Robot extends TimedRobot {
 			} else {
 				launchOn = true;
 			}
-		} 
-		if(commandsController.getBButtonReleased()) {
+		} else if(commandsController.getBButtonReleased()) {
 			rollerPower = ampPower;
 			if(launchOn) {
 				launchOn = false;
@@ -183,13 +192,19 @@ public class Robot extends TimedRobot {
 				launchOn = true;
 			}
 		}
-
-		if(!launchOn) {
+		
+		if(commandsController.getXButton()) {
+			rollerPower = reversePower;
+			setLaunchMotor(rollerPower);
+		} else if(launchOn) {
+			setLaunchMotor(rollerPower);
+		} else {
 			rollerPower = 0;
 			launchMotor1.stopMotor();
 			launchMotor2.stopMotor();
-		} 
-		setLaunchMotor(rollerPower);
+		}
+		
+		
 	
 		
 		
