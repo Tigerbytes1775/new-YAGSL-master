@@ -41,19 +41,22 @@ public class Robot extends TimedRobot {
 	private final PWMVictorSPX intakeMotor = new PWMVictorSPX(9);
 	private final PWMVictorSPX launchMotor1 = new PWMVictorSPX(8);
 	private final PWMVictorSPX launchMotor2 = new PWMVictorSPX(7);
-
-	private final double pivotOutput = 0.35;
+	//private final PWMVictorSPX climbMotor1 = new PWMVictorSPX(6);//Ids not determined
+	//private final PWMVictorSPX climbMotor2 = new PWMVictorSPX(5);//Ids not determined
+	private final double fastPivot = 0.5;
+	private final double slowPivot = 0.35;
 	private final int pivotLimit = 20;
+	private double pivotOutput = 0;
 
 	private final double intakeOutput = 0.75;
 
 	private final double speakerPower = 1;
-	private final double ampPower = 0.7;
-	private final double reversePower = 0.05;
+	private final double ampPower = 0.475;
+	private final double reversePower = -0.15;
 	private double rollerPower = 0;
-	public boolean launchOn = false;
+	private boolean launchOn = false;
 
-
+	//private final double climbPower = 0.5;
  
 	//function to set the arm output power in the vertical direction
 	public void setPivotMotor(double percent) {
@@ -67,11 +70,18 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Intake power(%)", percent);
 	}
 
-	public void setLaunchMotor(double percent) {
+	public void setLaunchMotors(double percent) {
 		launchMotor1.set(percent);
 		launchMotor2.set(-percent);
 		SmartDashboard.putNumber("Launch power(%)", percent);
 	
+	}
+	/* 
+	public void setClimbMotors(double percent) {
+		climbMotor1.set(percent);
+		climbMotor2.set(-percent);
+		SmartDashboard.putNumber("ClimbPower power(%)", percent);
+
 	}
 	/**
 	 * This function is run when the robot is first started up and should be used for any
@@ -90,7 +100,7 @@ public class Robot extends TimedRobot {
 		pivotMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
 		pivotMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
 
-		intakeMotor.setInverted(false);
+		intakeMotor.setInverted(false);  
 
 
 		// if bug with directly below, ignore and build
@@ -111,8 +121,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit () {
 
-		this.autonomousCommand = this.robotContainer.getAutonomousCommand();
-		this.autonomousCommand.schedule();
+		//this.autonomousCommand = this.robotContainer.getAutonomousCommand();
+		//this.autonomousCommand.schedule();
 	}
 
 	@Override
@@ -166,13 +176,20 @@ public class Robot extends TimedRobot {
 			pivotPower = 0.0;
 			pivotMotor.setIdleMode(IdleMode.kBrake);
 		}*/
+
+		if (commandsController.getLeftBumper()) {
+			pivotOutput = fastPivot;
+		} else {
+			pivotOutput = slowPivot;
+		}
+
 		if(Math.abs(commandsController.getLeftY()) > 0.2) {
 			pivotPower = commandsController.getLeftY() * pivotOutput;
 		} else {
 			pivotMotor.stopMotor();
 		}
 	 	
-		setPivotMotor(pivotPower);
+		setPivotMotor(-pivotPower);
 		System.out.println(pivotMotor.getAbsoluteEncoder());
 		// Cancels all running commands at the start of test mode.
 		
@@ -194,10 +211,10 @@ public class Robot extends TimedRobot {
 		}
 		
 		if(commandsController.getXButton()) {
-			rollerPower = reversePower;
-			setLaunchMotor(rollerPower);
+			setLaunchMotors(reversePower);
 		} else if(launchOn) {
-			setLaunchMotor(rollerPower);
+			//commandsController.setRumble(null, pivotPower);
+			setLaunchMotors(rollerPower);
 		} else {
 			rollerPower = 0;
 			launchMotor1.stopMotor();
@@ -208,11 +225,15 @@ public class Robot extends TimedRobot {
 	
 		
 		
-
-		/*if() {
-			
+		/* 
+		if(commandsController.getYButtonReleased()) {
+			setClimbMotors(-climbPower);
+		} else {
+			setClimbMotors(0);
+			climbMotor1.stopMotor();
+			climbMotor2.stopMotor();
 		}*/
-
+		
 	}
 
 	@Override

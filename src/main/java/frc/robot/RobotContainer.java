@@ -2,7 +2,13 @@ package frc.robot;
 
 import java.io.IOException;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
+
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
@@ -16,12 +22,17 @@ import frc.robot.util.Alerts;
 import frc.robot.util.Constants;
 
 public class RobotContainer {
+    
 
     private Swerve swerve;
     private Limelight limelight;
     private Controller driverOne;
 
-    public RobotContainer () {
+    public RobotContainer() {
+        //testing new auto call
+        //public Command getAutonomousCommand() {
+            //return new PathPlannerAuto();
+        //}
 
         try { this.swerve = new Swerve(); } 
         catch (IOException ioException) { Alerts.swerveInitialized.set(true); }
@@ -63,7 +74,18 @@ public class RobotContainer {
         this.driverOne.rightTrigger().whileTrue(this.swerve.getAngleSysidRoutine());
         */
     }
-
-    public Command getAutonomousCommand () { return this.swerve.getAutonomousCommand(); }
+    //TODO: add auto path
+    //orig:
+    //public Command getAutonomousCommand () { return this.swerve.getAutonomousCommand(); }
+    //new
+    //public Command getAutonomousCommand () { return autoChooser.getSelected(); }
+    //newer
+    //public Command getAutonomousCommand () { return new PathPlannerAuto("line"); }
+    //public Command getAutonomousCommand () { return this.swerve.getAutonomousCommand(); }
+    //Testing Auto
+    public Command getAutonomousCommand() {
+        PathPlannerPath path = PathPlannerPath.fromPathFile("line");
+        return AutoBuilder.followPath(path);
+    }
     public void setBrakeMode (boolean brake) { new BrakeMode(this.swerve, brake).schedule(); }
 }
