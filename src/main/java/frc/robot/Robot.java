@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.motorcontrol.PWMVictorSPX;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -48,10 +49,10 @@ public class Robot extends TimedRobot {
 	private final int pivotLimit = 20;
 	private double pivotOutput = 0;
 
-	private final double intakeOutput = 0.75;
+	private final double intakeOutput = 0.50;
 
 	private final double speakerPower = 1;
-	private final double ampPower = 0.475;
+	private final double ampPower = 0.46;//was .475 at comp
 	private final double reversePower = -0.15;
 	private double rollerPower = 0;
 	private boolean launchOn = false;
@@ -213,10 +214,12 @@ public class Robot extends TimedRobot {
 		if(commandsController.getXButton()) {
 			setLaunchMotors(reversePower);
 		} else if(launchOn) {
-			//commandsController.setRumble(null, pivotPower);
+
+			commandsController.setRumble(RumbleType.kBothRumble, 0.2);
 			setLaunchMotors(rollerPower);
 		} else {
 			rollerPower = 0;
+			commandsController.setRumble(RumbleType.kBothRumble, 0);
 			launchMotor1.stopMotor();
 			launchMotor2.stopMotor();
 		}
