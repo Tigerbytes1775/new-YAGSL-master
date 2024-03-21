@@ -37,7 +37,7 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 public class Swerve extends SubsystemBase {
     
     private final SwerveDrive swerveDrive;
-    private SendableChooser<Command> autonomousChooser;
+    //private SendableChooser<Command> autonomousChooser;
     private Field2d field = new Field2d();
 
     public Swerve () throws IOException {
@@ -58,37 +58,38 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic () { this.field.setRobotPose(this.getPose()); }
     public SwerveDriveConfiguration getConfiguration () { return this.swerveDrive.swerveDriveConfiguration; }
-
     private void initializePathPlanner () {
 
         AutoBuilder.configureHolonomic(
-            this::getPose, this::resetOdometry,
-            this::getRobotVelocity, this::setChassisSpeeds,
+            this::getPose, 
+            this::resetOdometry,
+            this::getRobotVelocity, 
+            this::setChassisSpeeds,
             new HolonomicPathFollowerConfig(
                 new PIDConstants(5.0, 0.0, 0.0),
-                new PIDConstants(
-                    this.swerveDrive.swerveController.config.headingPIDF.p,
+                new PIDConstants(5.0, 0.0, 0.0),/*Barstow: this.swerveDrive.swerveController.config.headingPIDF.p,
                     this.swerveDrive.swerveController.config.headingPIDF.i,
-                    this.swerveDrive.swerveController.config.headingPIDF.d
-                ),
-                Constants.SwerveConstants.MAX_DRIVE_SPEED,
+                    this.swerveDrive.swerveController.config.headingPIDF.d */
+                4.5,//WAS: Constants.SwerveConstants.MAX_DRIVE_SPEED 
                 this.getConfiguration().getDriveBaseRadiusMeters(),
-                new ReplanningConfig(
-                    true, true, 
+                new ReplanningConfig()/*WAS:true, true, 
                     Constants.SwerveConstants.REPLANNING_TOTAL_ERROR,
-                    Constants.SwerveConstants.REPLANNING_ERROR_SPIKE
-                )
+                    Constants.SwerveConstants.REPLANNING_ERROR_SPIKE */
             ),
             () -> {
-
                 var alliance = DriverStation.getAlliance();
-                return alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
+                if (alliance.isPresent()) {
+                return alliance.get() == DriverStation.Alliance.Red;
+                }
+                return false;
+                /* var alliance = DriverStation.getAlliance();
+                return alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false; */
             },
             this
         );
 
-        this.autonomousChooser = AutoBuilder.buildAutoChooser();
-        Shuffleboard.getTab("Autonomous").add("Autonomous Chooser", this.autonomousChooser);
+        //this.autonomousChooser = AutoBuilder.buildAutoChooser();
+        //Shuffleboard.getTab("Autonomous").add("Autonomous Chooser", this.autonomousChooser);
     }
 
     public void configureSwerveDashboard () {
@@ -165,7 +166,7 @@ public class Swerve extends SubsystemBase {
 
     public void lock () { this.swerveDrive.lockPose(); }
     public void setBrakeMode (boolean brake) { this.swerveDrive.setMotorIdleMode(brake); }
-    public Command getAutonomousCommand () { return this.autonomousChooser.getSelected(); }
+    //public Command getAutonomousCommand () { return this.autonomousChooser.getSelected(); }
 
     public Command getDriveSysidRoutine () {
 

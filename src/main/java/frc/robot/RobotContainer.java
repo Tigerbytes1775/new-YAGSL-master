@@ -3,8 +3,6 @@ package frc.robot;
 import java.io.IOException;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -15,17 +13,14 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import frc.lib.Controller;
 import frc.robot.commands.swerve.BrakeMode;
 import frc.robot.commands.swerve.Drive;
-import frc.robot.commands.swerve.TrackAprilTags;
-import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.Alerts;
 import frc.robot.util.Constants;
 
 public class RobotContainer {
-    
 
+    private final SendableChooser<Command> autoChooser;
     private Swerve swerve;
-    private Limelight limelight;
     private Controller driverOne;
 
     public RobotContainer() {
@@ -37,10 +32,13 @@ public class RobotContainer {
         try { this.swerve = new Swerve(); } 
         catch (IOException ioException) { Alerts.swerveInitialized.set(true); }
 
-        this.limelight = new Limelight();
+
         this.driverOne = new Controller(0);
 
         this.configureCommands();
+        
+        autoChooser = AutoBuilder.buildAutoChooser("line");
+        SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
            //NEED FIX FOR AUTO (prolly not even java land copy past from youtube source geoffsmchit pathplanner2023Overveiw) not done leave early bye bye
@@ -64,7 +62,7 @@ public class RobotContainer {
         
         
 
-        this.limelight.setDefaultCommand(new TrackAprilTags(this.swerve, this.limelight));
+
 
         this.driverOne.x().onTrue(new InstantCommand(this.swerve::zeroGyro, this.swerve));
         this.driverOne.leftBumper().whileTrue(new RepeatCommand(new InstantCommand(this.swerve::lock, this.swerve)));
@@ -79,13 +77,13 @@ public class RobotContainer {
     //public Command getAutonomousCommand () { return this.swerve.getAutonomousCommand(); }
     //new
     //public Command getAutonomousCommand () { return autoChooser.getSelected(); }
-    //newer
-    //public Command getAutonomousCommand () { return new PathPlannerAuto("line"); }
-    //public Command getAutonomousCommand () { return this.swerve.getAutonomousCommand(); }
-    //Testing Auto
-    public Command getAutonomousCommand() {
+    /*
+     * public Command getAutonomousCommand() {
         PathPlannerPath path = PathPlannerPath.fromPathFile("line");
         return AutoBuilder.followPath(path);
+     */
+    public Command getAutonomousCommand() {
+        return autoChooser.getSelected();
     }
     public void setBrakeMode (boolean brake) { new BrakeMode(this.swerve, brake).schedule(); }
 }

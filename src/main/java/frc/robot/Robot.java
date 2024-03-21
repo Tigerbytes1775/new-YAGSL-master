@@ -122,8 +122,9 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit () {
 
-		//this.autonomousCommand = this.robotContainer.getAutonomousCommand();
-		//this.autonomousCommand.schedule();
+		this.autonomousCommand = this.robotContainer.getAutonomousCommand();
+		this.autonomousCommand.schedule();
+
 	}
 
 	@Override
