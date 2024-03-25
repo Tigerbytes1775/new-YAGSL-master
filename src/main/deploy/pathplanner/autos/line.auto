@@ -5,12 +5,54 @@
       "x": 1.2670652829457314,
       "y": 5.56
     },
-    "rotation": 0
+    "rotation": 0.44799274853717486
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "LaunchSpeaker"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeOut"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "LaunchOff"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeIn"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "PivotOut"
+          }
+        },
         {
           "type": "path",
           "data": {
@@ -20,7 +62,13 @@
         {
           "type": "named",
           "data": {
-            "name": "exampleCommand"
+            "name": "PivotOff"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeOff"
           }
         }
       ]
