@@ -15,7 +15,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.Swerve;
+import frc.lib.Controller;
+import frc.robot.subsystems.Launch;
 import frc.robot.util.Alerts;
 import frc.robot.util.BuildConstants;
 import frc.robot.util.Constants;
@@ -32,32 +33,37 @@ import java.lang.Math;
 public class Robot extends TimedRobot {
 
 	private final XboxController commandsController = new XboxController(1);
+	private final XboxController driveController = new XboxController(0);
 
 	private RobotContainer robotContainer;
 	private Command autonomousCommand;
 	private Timer disabledTimer;
+	
+
+	Launch launch;
 
 	// PIVOT code
 	private final CANSparkMax pivotMotor = new CANSparkMax(23, MotorType.kBrushless);
 	private final PWMVictorSPX intakeMotor = new PWMVictorSPX(9);
-	private final PWMVictorSPX launchMotor1 = new PWMVictorSPX(8);
-	private final PWMVictorSPX launchMotor2 = new PWMVictorSPX(7);
-	//private final PWMVictorSPX climbMotor1 = new PWMVictorSPX(6);//Ids not determined
-	//private final PWMVictorSPX climbMotor2 = new PWMVictorSPX(5);//Ids not determined
+
+	
+
+	private final PWMVictorSPX climbMotor1 = new PWMVictorSPX(0);//Ids not determined
+	private final PWMVictorSPX climbMotor2 = new PWMVictorSPX(1);//Ids not determined
 	private final double fastPivot = 0.5;
 	private final double slowPivot = 0.35;
 	private final int pivotLimit = 20;
 	private double pivotOutput = 0;
 
 	private final double intakeOutput = 0.50;
-
+	
 	private final double speakerPower = 1;
 	private final double ampPower = 0.46;//was .475 at comp
 	private final double reversePower = -0.15;
 	private double rollerPower = 0;
 	private boolean launchOn = false;
 
-	//private final double climbPower = 0.5;
+	private final double climbPower = 0.1;
  
 	//function to set the arm output power in the vertical direction
 	public void setPivotMotor(double percent) {
@@ -71,17 +77,16 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Intake power(%)", percent);
 	}
 
-	public void setLaunchMotors(double percent) {
-		launchMotor1.set(percent);
-		launchMotor2.set(-percent);
-		SmartDashboard.putNumber("Launch power(%)", percent);
 	
-	}
-	/* 
+	
 	public void setClimbMotors(double percent) {
 		climbMotor1.set(percent);
 		climbMotor2.set(-percent);
 		SmartDashboard.putNumber("ClimbPower power(%)", percent);
+		if(percent == 0) {
+			climbMotor1.stopMotor();
+			climbMotor2.stopMotor();
+		}
 
 	}
 	/**
@@ -109,6 +114,7 @@ public class Robot extends TimedRobot {
 
 		this.robotContainer = new RobotContainer();
 		this.disabledTimer = new Timer();
+		launch = robotContainer.launch;
 
 		Shuffleboard.getTab("Autonomous").add("Command Scheduler", CommandScheduler.getInstance());
 	}
@@ -132,7 +138,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit () {
-
+		
+		
 		if (this.autonomousCommand != null) { this.autonomousCommand.cancel(); }
 		this.robotContainer.setBrakeMode(true);
 	}
@@ -213,30 +220,32 @@ public class Robot extends TimedRobot {
 		}
 		
 		if(commandsController.getXButton()) {
-			setLaunchMotors(reversePower);
+			
+			launch.setLaunchMotors(reversePower);
 		} else if(launchOn) {
 
 			commandsController.setRumble(RumbleType.kBothRumble, 0.2);
-			setLaunchMotors(rollerPower);
+			launch.setLaunchMotors(rollerPower);
 		} else {
 			rollerPower = 0;
 			commandsController.setRumble(RumbleType.kBothRumble, 0);
-			launchMotor1.stopMotor();
-			launchMotor2.stopMotor();
+			launch.setLaunchMotors(rollerPower);
 		}
 		
 		
 	
 		
 		
-		/* 
-		if(commandsController.getYButtonReleased()) {
+		
+		if(driveController.getRightBumper()) {
 			setClimbMotors(-climbPower);
+		} else if (driveController.getLeftBumper()) {
+			setClimbMotors(climbPower);
 		} else {
 			setClimbMotors(0);
 			climbMotor1.stopMotor();
 			climbMotor2.stopMotor();
-		}*/
+		}
 		
 	}
 

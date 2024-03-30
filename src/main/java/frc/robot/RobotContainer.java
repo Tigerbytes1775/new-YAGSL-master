@@ -3,6 +3,7 @@ package frc.robot;
 import java.io.IOException;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -11,8 +12,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import frc.lib.Controller;
+import frc.robot.commands.LaunchCommand;
 import frc.robot.commands.swerve.BrakeMode;
 import frc.robot.commands.swerve.Drive;
+import frc.robot.subsystems.Launch;
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.Alerts;
 import frc.robot.util.Constants;
@@ -22,12 +25,17 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
     private Swerve swerve;
     private Controller driverOne;
+    public Launch launch = new Launch();
 
     public RobotContainer() {
         //testing new auto call
         //public Command getAutonomousCommand() {
             //return new PathPlannerAuto();
         //}
+        NamedCommands.registerCommand("LaunchSpeaker", new LaunchCommand(launch, 1));
+        NamedCommands.registerCommand("LaunchAmp", new LaunchCommand(launch, 0.46));
+        NamedCommands.registerCommand("LaunchOff", new LaunchCommand(launch, 0));
+
 
         try { this.swerve = new Swerve(); } 
         catch (IOException ioException) { Alerts.swerveInitialized.set(true); }
@@ -59,7 +67,7 @@ public class RobotContainer {
                 () -> MathUtil.applyDeadband(this.driverOne.getHID().getRightX(), Constants.SwerveConstants.OMEGA_DEADBAND), 
                 () -> this.driverOne.getHID().getPOV()
         ));
-        
+         
         
 
 
