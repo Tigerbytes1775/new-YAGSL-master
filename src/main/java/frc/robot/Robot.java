@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.pathplanner.lib.auto.CommandUtil;
 import com.revrobotics.CANSparkMax;
 //import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -30,6 +32,7 @@ import java.lang.Math;
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
+
 public class Robot extends TimedRobot {
 
 	private final XboxController commandsController = new XboxController(1);
@@ -41,6 +44,8 @@ public class Robot extends TimedRobot {
 	
 
 	Launch launch;
+
+Command AutomousCommand;
 
 	// PIVOT code
 	private final CANSparkMax pivotMotor = new CANSparkMax(23, MotorType.kBrushless);
@@ -117,6 +122,9 @@ public class Robot extends TimedRobot {
 		launch = robotContainer.launch;
 
 		Shuffleboard.getTab("Autonomous").add("Command Scheduler", CommandScheduler.getInstance());
+
+		robotContainer = new RobotContainer();
+
 	}
 
 	@Override
@@ -130,7 +138,8 @@ public class Robot extends TimedRobot {
 
 		this.autonomousCommand = this.robotContainer.getAutonomousCommand();
 		this.autonomousCommand.schedule();
-
+		
+		
 	}
 
 	@Override
@@ -169,22 +178,7 @@ public class Robot extends TimedRobot {
 		 intakeMotor.set(intakePower);
 
 		double pivotPower = 0;
-		/*// motion for the arm in the vertical direction
-		if (commandsController.getLeftY() > 0.5) {
-			//raise the arm
-			
-			pivotPower = -pivotOutput;
-
-		} else if (commandsController.getLeftY() < -0.5) {
-			//lower the arm
-			pivotPower = pivotOutput;
-
-		} else {
-			//do nothing and let it sit where it is
-			
-			pivotPower = 0.0;
-			pivotMotor.setIdleMode(IdleMode.kBrake);
-		}*/
+		
 
 		if (commandsController.getLeftBumper()) {
 			pivotOutput = fastPivot;
@@ -263,7 +257,7 @@ public class Robot extends TimedRobot {
 		if (this.disabledTimer.get() >= Constants.SwerveConstants.LOCK_TIME) {
 
 			this.robotContainer.setBrakeMode(false);
-		}
+	}
 	}
 	
 	@Override

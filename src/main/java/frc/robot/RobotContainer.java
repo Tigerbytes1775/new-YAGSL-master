@@ -9,6 +9,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import frc.lib.Controller;
@@ -26,7 +27,6 @@ public class RobotContainer {
     private Swerve swerve;
     private Controller driverOne;
     public Launch launch = new Launch();
-
     public RobotContainer() {
         //testing new auto call
         //public Command getAutonomousCommand() {
@@ -37,6 +37,9 @@ public class RobotContainer {
         NamedCommands.registerCommand("LaunchOff", new LaunchCommand(launch, 0));
 
 
+
+        
+
         try { this.swerve = new Swerve(); } 
         catch (IOException ioException) { Alerts.swerveInitialized.set(true); }
 
@@ -45,7 +48,7 @@ public class RobotContainer {
 
         this.configureCommands();
         
-        autoChooser = AutoBuilder.buildAutoChooser("line");
+        autoChooser = AutoBuilder.buildAutoChooser("New Auto");
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 

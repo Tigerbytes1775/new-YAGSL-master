@@ -20,4 +20,6 @@ public class LaunchCommand extends Command {
     public void initialize() {
         launch.setLaunchMotors(percent);
 	}
+
+
 }
