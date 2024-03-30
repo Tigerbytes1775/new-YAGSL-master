@@ -33,7 +33,7 @@ public class RobotContainer {
             //return new PathPlannerAuto();
         //}
         NamedCommands.registerCommand("LaunchSpeaker", new LaunchCommand(launch, 1));
-        NamedCommands.registerCommand("LaunchAmp", new LaunchCommand(launch, 0.46));
+        NamedCommands.registerCommand("LaunchAmp", new LaunchCommand(launch, 0.1));
         NamedCommands.registerCommand("LaunchOff", new LaunchCommand(launch, 0));
 
 

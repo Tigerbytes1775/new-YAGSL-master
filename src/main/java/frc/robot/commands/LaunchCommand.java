@@ -18,7 +18,9 @@ public class LaunchCommand extends Command {
 
 	@Override
     public void initialize() {
+
         launch.setLaunchMotors(percent);
+		
 	}
 
 

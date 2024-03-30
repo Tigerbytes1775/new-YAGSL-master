@@ -45,7 +45,7 @@ public class Robot extends TimedRobot {
 
 	Launch launch;
 
-Command AutomousCommand;
+	Command AutomousCommand;
 
 	// PIVOT code
 	private final CANSparkMax pivotMotor = new CANSparkMax(23, MotorType.kBrushless);
@@ -123,7 +123,7 @@ Command AutomousCommand;
 
 		Shuffleboard.getTab("Autonomous").add("Command Scheduler", CommandScheduler.getInstance());
 
-		robotContainer = new RobotContainer();
+
 
 	}
 
