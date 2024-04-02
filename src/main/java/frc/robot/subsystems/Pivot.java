@@ -14,7 +14,7 @@ public class Pivot extends SubsystemBase {
     
     public Pivot() {
 
-        pivotMotor.setInverted(false);
+        pivotMotor.setInverted(true);
 		pivotMotor.setIdleMode(IdleMode.kBrake);
 		pivotMotor.setSmartCurrentLimit(20);
 		((CANSparkMax) pivotMotor).burnFlash();

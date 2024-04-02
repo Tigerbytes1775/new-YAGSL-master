@@ -62,6 +62,7 @@ public class Robot extends TimedRobot {
 	
 
 	private final double pivotMultiplier = 0.35;
+	private final double fastPivotMultiplier = 0.6;
 
 	
 
@@ -73,7 +74,7 @@ public class Robot extends TimedRobot {
 	private double rollerPower = 0;
 	private boolean launchOn = false;
 
-	private final double climbPower = 0.5;
+	private final double climbPower = 0.75;
  
 	//function to set the arm output power in the vertical direction
 	
@@ -140,12 +141,12 @@ public class Robot extends TimedRobot {
 		double intakePower;
 
 		// motion for the arm in the horizontal direction
-		if (commandsController.getLeftTriggerAxis() > 0.5) {
+		if (commandsController.getLeftTriggerAxis() > 0.0825) {
 		//extend the arm
 		// we could set it to srmpower = armXOuptuPower x get left trigger axis ( test it on the pivot firs)
 		intakePower = intakeOutput;
 
-		 } else if (commandsController.getRightTriggerAxis() > 0.5) {
+		 } else if (commandsController.getRightTriggerAxis() > 0.0825) {
 		// //retract the arm
 		intakePower = -intakeOutput;
 
@@ -158,12 +159,31 @@ public class Robot extends TimedRobot {
 		 intake.setMotors(intakePower);
 
 		
-		double pivotPower = 0;
-		if(Math.abs(commandsController.getLeftY()) > 0.2) {
-			pivotPower = commandsController.getLeftY() * pivotMultiplier;
-		} 
+		
+		
+		SmartDashboard.putBoolean("Left Bumper", commandsController.getLeftBumperPressed());
+		if(Math.abs(commandsController.getLeftY()) > 0.0825) {
+
+			double pivotPower = commandsController.getLeftY();
+			 
+			if(commandsController.getLeftBumperPressed()) {
+
+			pivotPower *= fastPivotMultiplier;
+
+			} else {
+
+			pivotPower *= pivotMultiplier;
+
+			}
+
+			pivot.setMotors(pivotPower);
+
+		} else {
+
+			pivot.setMotors(0);
+		}
 	 	
-		pivot.setMotors(-pivotPower);
+		
 		
 		
 		
@@ -201,9 +221,9 @@ public class Robot extends TimedRobot {
 		
 		
 		
-		if(driveController.getRightTriggerAxis() > 0.2) {
+		if(driveController.getRightTriggerAxis() > 0.0825) {
 			climb.setMotors(-climbPower);
-		} else if (driveController.getLeftTriggerAxis() > 0.2) {
+		} else if (driveController.getLeftTriggerAxis() > 0.0825) {
 			climb.setMotors(climbPower);
 		} else {
 			climb.setMotors(0);
@@ -216,6 +236,7 @@ public class Robot extends TimedRobot {
 
 		pivot.setMotors(0);
 		launch.setMotors(0);
+		intake.setMotors(0);
 		this.disabledTimer.reset();
 		this.disabledTimer.start();
 	}

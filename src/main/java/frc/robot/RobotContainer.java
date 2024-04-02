@@ -43,18 +43,6 @@ public class RobotContainer {
             //return new PathPlannerAuto();
         //}
 
-        try { this.swerve = new Swerve(); } 
-        catch (IOException ioException) { Alerts.swerveInitialized.set(true); }
-
-
-        this.driverOne = new Controller(0);
-
-        this.configureCommands();
-        
-        autoChooser = AutoBuilder.buildAutoChooser("New Auto");
-        SmartDashboard.putData("Auto Chooser", autoChooser);
-
-
         NamedCommands.registerCommand("LaunchSpeaker", new LaunchCommand(launch, 0.5));
         NamedCommands.registerCommand("LaunchAmp", new LaunchCommand(launch, 0.1));
         NamedCommands.registerCommand("LaunchOff", new LaunchCommand(launch, 0));
@@ -66,6 +54,27 @@ public class RobotContainer {
         NamedCommands.registerCommand("IntakeIn", new IntakeCommand(intake, -0.35));
         NamedCommands.registerCommand("IntakeOut", new IntakeCommand(intake, 0.35));
         NamedCommands.registerCommand("IntakeOff", new IntakeCommand(intake, 0));
+        
+
+        
+
+        try { this.swerve = new Swerve(); } 
+        catch (IOException ioException) { Alerts.swerveInitialized.set(true); }
+
+
+        this.driverOne = new Controller(0);
+
+        this.configureCommands();
+        autoChooser = AutoBuilder.buildAutoChooser("line");
+        SmartDashboard.putData("Auto Chooser", autoChooser);
+        
+
+
+
+        
+
+        
+        SmartDashboard.putBoolean("PivotIn Exist", NamedCommands.hasCommand("PivotIn"));
     }
 
            //NEED FIX FOR AUTO (prolly not even java land copy past from youtube source geoffsmchit pathplanner2023Overveiw) not done leave early bye bye
