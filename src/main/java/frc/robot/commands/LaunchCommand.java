@@ -19,9 +19,28 @@ public class LaunchCommand extends Command {
 	@Override
     public void initialize() {
 
-        launch.setLaunchMotors(percent);
+        launch.setMotors(percent);
 		
 	}
+
+	@Override
+	public void execute()
+	{
+		launch.setMotors(percent);
+	}
+
+	@Override
+	public boolean isFinished()
+	{
+		return false;
+	}
+
+	@Override
+	public void end(boolean interrupted)
+	{
+		launch.setMotors(0);
+	}
+
 
 
 }

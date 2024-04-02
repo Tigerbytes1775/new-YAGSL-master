@@ -14,13 +14,13 @@
         {
           "type": "named",
           "data": {
-            "name": "LaunchAmp"
+            "name": "IntakeIn"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.2
+            "waitTime": 3.0
           }
         },
         {

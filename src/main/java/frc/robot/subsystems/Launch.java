@@ -1,9 +1,7 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
-
 import edu.wpi.first.wpilibj.motorcontrol.PWMVictorSPX;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Launch extends SubsystemBase{
@@ -20,18 +18,19 @@ public class Launch extends SubsystemBase{
         
     }
 
-    public void setLaunchMotors(double percent) {
+    public void setMotors(double percent) {
 
         launchMotor1.set(percent);
         launchMotor2.set(percent);
-
+        SmartDashboard.putNumber("Launch power(%)", percent);
+        
         if(percent == 0) {
 
             launchMotor1.stopMotor();
             launchMotor2.stopMotor();
             
         }        
-        //SmartDashboard.putNumber("Launch power(%)", percent);
+        
     }
 
     

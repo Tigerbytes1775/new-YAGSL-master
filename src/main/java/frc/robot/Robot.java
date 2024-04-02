@@ -18,7 +18,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.Controller;
+import frc.robot.subsystems.Climb;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Launch;
+import frc.robot.subsystems.Pivot;
 import frc.robot.util.Alerts;
 import frc.robot.util.BuildConstants;
 import frc.robot.util.Constants;
@@ -42,23 +45,25 @@ public class Robot extends TimedRobot {
 	private Command autonomousCommand;
 	private Timer disabledTimer;
 	
-
 	Launch launch;
+	Pivot pivot;
+	Intake intake;
+	Climb climb;
 
 	Command AutomousCommand;
 
 	// PIVOT code
-	private final CANSparkMax pivotMotor = new CANSparkMax(23, MotorType.kBrushless);
-	private final PWMVictorSPX intakeMotor = new PWMVictorSPX(9);
+	
+	
+
 
 	
 
-	private final PWMVictorSPX climbMotor1 = new PWMVictorSPX(0);//Ids not determined
-	private final PWMVictorSPX climbMotor2 = new PWMVictorSPX(1);//Ids not determined
-	private final double fastPivot = 0.5;
-	private final double slowPivot = 0.35;
-	private final int pivotLimit = 20;
-	private double pivotOutput = 0;
+	
+
+	private final double pivotMultiplier = 0.35;
+
+	
 
 	private final double intakeOutput = 0.50;
 	
@@ -68,32 +73,19 @@ public class Robot extends TimedRobot {
 	private double rollerPower = 0;
 	private boolean launchOn = false;
 
-	private final double climbPower = 0.1;
+	private final double climbPower = 0.5;
  
 	//function to set the arm output power in the vertical direction
-	public void setPivotMotor(double percent) {
-		pivotMotor.set(percent);
-		SmartDashboard.putNumber("Pivot power(%)", percent);
-	}
+	
 
 	//function to set the arm output power in the horizontal direction
-	public void setIntakeMotor(double percent) {
-		intakeMotor.set(percent);
-		SmartDashboard.putNumber("Intake power(%)", percent);
-	}
+	
 
 	
 	
-	public void setClimbMotors(double percent) {
-		climbMotor1.set(percent);
-		climbMotor2.set(-percent);
-		SmartDashboard.putNumber("ClimbPower power(%)", percent);
-		if(percent == 0) {
-			climbMotor1.stopMotor();
-			climbMotor2.stopMotor();
-		}
+	
 
-	}
+	
 	/**
 	 * This function is run when the robot is first started up and should be used for any
 	 * initialization code.
@@ -101,29 +93,17 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit () {
 
-		// initial conditions for arm
-		pivotMotor.setInverted(true);
-		pivotMotor.setIdleMode(IdleMode.kBrake);
-		pivotMotor.setSmartCurrentLimit(pivotLimit);
-		((CANSparkMax) pivotMotor).burnFlash();
-
-		// limit the direction of the arm's rotations (kReverse = up)
-		pivotMotor.enableSoftLimit(SoftLimitDirection.kForward, false);
-		pivotMotor.enableSoftLimit(SoftLimitDirection.kReverse, false);
-
-		intakeMotor.setInverted(false);  
-
-
 		// if bug with directly below, ignore and build
 		if (BuildConstants.DIRTY == 1) { Alerts.versionControl.set(true); }
 
 		this.robotContainer = new RobotContainer();
 		this.disabledTimer = new Timer();
 		launch = robotContainer.launch;
+		pivot = robotContainer.pivot;
+		intake = robotContainer.intake;
+		climb = robotContainer.climb;
 
 		Shuffleboard.getTab("Autonomous").add("Command Scheduler", CommandScheduler.getInstance());
-
-
 
 	}
 
@@ -131,6 +111,7 @@ public class Robot extends TimedRobot {
 	public void robotPeriodic () {
 
 		CommandScheduler.getInstance().run();
+
 	}
 
 	@Override
@@ -170,31 +151,20 @@ public class Robot extends TimedRobot {
 
 		 } else {
 		 // do nothing and let it sit where it is
-			intakePower = 0.0;
-			intakeMotor.stopMotor();
+			intakePower = 0;
 		 //intakeMotor.setNeutralMode(NeutralMode.Brake);
 		 }
 		//setIntakeMotor(intakePower);
-		 intakeMotor.set(intakePower);
+		 intake.setMotors(intakePower);
 
-		double pivotPower = 0;
 		
-
-		if (commandsController.getLeftBumper()) {
-			pivotOutput = fastPivot;
-		} else {
-			pivotOutput = slowPivot;
-		}
-
+		double pivotPower = 0;
 		if(Math.abs(commandsController.getLeftY()) > 0.2) {
-			pivotPower = commandsController.getLeftY() * pivotOutput;
-		} else {
-			pivotMotor.stopMotor();
-		}
+			pivotPower = commandsController.getLeftY() * pivotMultiplier;
+		} 
 	 	
-		setPivotMotor(-pivotPower);
-		System.out.println(pivotMotor.getAbsoluteEncoder());
-		// Cancels all running commands at the start of test mode.
+		pivot.setMotors(-pivotPower);
+		
 		
 		
 		if(commandsController.getAButtonReleased()) {
@@ -215,15 +185,15 @@ public class Robot extends TimedRobot {
 		
 		if(commandsController.getXButton()) {
 			
-			launch.setLaunchMotors(reversePower);
+			launch.setMotors(reversePower);
 		} else if(launchOn) {
 
-			commandsController.setRumble(RumbleType.kBothRumble, 0.2);
-			launch.setLaunchMotors(rollerPower);
+			commandsController.setRumble(RumbleType.kBothRumble, 0.1);
+			launch.setMotors(rollerPower);
 		} else {
 			rollerPower = 0;
 			commandsController.setRumble(RumbleType.kBothRumble, 0);
-			launch.setLaunchMotors(rollerPower);
+			launch.setMotors(rollerPower);
 		}
 		
 		
@@ -231,14 +201,12 @@ public class Robot extends TimedRobot {
 		
 		
 		
-		if(driveController.getRightBumper()) {
-			setClimbMotors(-climbPower);
-		} else if (driveController.getLeftBumper()) {
-			setClimbMotors(climbPower);
+		if(driveController.getRightTriggerAxis() > 0.2) {
+			climb.setMotors(-climbPower);
+		} else if (driveController.getLeftTriggerAxis() > 0.2) {
+			climb.setMotors(climbPower);
 		} else {
-			setClimbMotors(0);
-			climbMotor1.stopMotor();
-			climbMotor2.stopMotor();
+			climb.setMotors(0);
 		}
 		
 	}
@@ -246,7 +214,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledInit () {
 
-		pivotMotor.set(0);
+		pivot.setMotors(0);
+		launch.setMotors(0);
 		this.disabledTimer.reset();
 		this.disabledTimer.start();
 	}
@@ -257,7 +226,7 @@ public class Robot extends TimedRobot {
 		if (this.disabledTimer.get() >= Constants.SwerveConstants.LOCK_TIME) {
 
 			this.robotContainer.setBrakeMode(false);
-	}
+		}
 	}
 	
 	@Override
