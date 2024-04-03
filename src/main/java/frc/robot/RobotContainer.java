@@ -43,17 +43,17 @@ public class RobotContainer {
             //return new PathPlannerAuto();
         //}
 
-        NamedCommands.registerCommand("LaunchSpeaker", new LaunchCommand(launch, 0.5));
-        NamedCommands.registerCommand("LaunchAmp", new LaunchCommand(launch, 0.1));
-        NamedCommands.registerCommand("LaunchOff", new LaunchCommand(launch, 0));
+        NamedCommands.registerCommand("LaunchSpeaker", new LaunchCommand(launch, 5,0.5));
+        NamedCommands.registerCommand("LaunchAmp", new LaunchCommand(launch, 5, 0.1));
+        NamedCommands.registerCommand("LaunchOff", new LaunchCommand(launch, 0.5, 0));
 
         NamedCommands.registerCommand("PivotIn", new PivotCommand(pivot, -0.35));
         NamedCommands.registerCommand("PivotOut", new PivotCommand(pivot, 0.35));
         NamedCommands.registerCommand("PivotOff", new PivotCommand(pivot, 0));
 
-        NamedCommands.registerCommand("IntakeIn", new IntakeCommand(intake, -0.35));
-        NamedCommands.registerCommand("IntakeOut", new IntakeCommand(intake, 0.35));
-        NamedCommands.registerCommand("IntakeOff", new IntakeCommand(intake, 0));
+        NamedCommands.registerCommand("IntakeIn", new IntakeCommand(intake, 3, -0.35));
+        NamedCommands.registerCommand("IntakeOut", new IntakeCommand(intake, 3, 0.35));
+        NamedCommands.registerCommand("IntakeOff", new IntakeCommand(intake, 0.1, 0));
         
 
         
