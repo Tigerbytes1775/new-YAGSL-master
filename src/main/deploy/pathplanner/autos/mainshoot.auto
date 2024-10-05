@@ -2,31 +2,43 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.0,
-      "y": 5.56
+      "x": 15.818140451446784,
+      "y": 6.633578385640183
     },
-    "rotation": 0.44799274853717486
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "IntakeIn"
+            "waitTime": 0.5
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 3.0
+            "name": "LaunchSpeaker"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeOut"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "LaunchOff"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeOff"
           }
         }
       ]

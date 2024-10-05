@@ -29,7 +29,7 @@ import frc.robot.util.Constants;
 public class RobotContainer {
 
     private final SendableChooser<Command> autoChooser;
-    private Swerve swerve;
+    Swerve swerve;
     private Controller driverOne;
 
     public Pivot pivot = new Pivot();
@@ -43,16 +43,16 @@ public class RobotContainer {
             //return new PathPlannerAuto();
         //}
 
-        NamedCommands.registerCommand("LaunchSpeaker", new LaunchCommand(launch, 5,0.5));
-        NamedCommands.registerCommand("LaunchAmp", new LaunchCommand(launch, 5, 0.1));
-        NamedCommands.registerCommand("LaunchOff", new LaunchCommand(launch, 0.5, 0));
+        NamedCommands.registerCommand("LaunchSpeaker", new LaunchCommand(launch, 3, 1));
+        NamedCommands.registerCommand("LaunchAmp", new LaunchCommand(launch, 3, 0.3));//should be 0.46
+        NamedCommands.registerCommand("LaunchOff", new LaunchCommand(launch, 0.1, 0));
 
-        NamedCommands.registerCommand("PivotIn", new PivotCommand(pivot, -0.35));
-        NamedCommands.registerCommand("PivotOut", new PivotCommand(pivot, 0.35));
-        NamedCommands.registerCommand("PivotOff", new PivotCommand(pivot, 0));
+        NamedCommands.registerCommand("PivotIn", new PivotCommand(pivot, 2.5, 0.35));
+        NamedCommands.registerCommand("PivotOut", new PivotCommand(pivot, 2.5,-0.35));
+        NamedCommands.registerCommand("PivotOff", new PivotCommand(pivot, 0.1, 0));
 
-        NamedCommands.registerCommand("IntakeIn", new IntakeCommand(intake, 3, -0.35));
-        NamedCommands.registerCommand("IntakeOut", new IntakeCommand(intake, 3, 0.35));
+        NamedCommands.registerCommand("IntakeIn", new IntakeCommand(intake, 0.75, -0.5));
+        NamedCommands.registerCommand("IntakeOut", new IntakeCommand(intake, 0.75, 0.5));
         NamedCommands.registerCommand("IntakeOff", new IntakeCommand(intake, 0.1, 0));
         
 
@@ -61,11 +61,10 @@ public class RobotContainer {
         try { this.swerve = new Swerve(); } 
         catch (IOException ioException) { Alerts.swerveInitialized.set(true); }
 
-
         this.driverOne = new Controller(0);
 
         this.configureCommands();
-        autoChooser = AutoBuilder.buildAutoChooser("line");
+        autoChooser = AutoBuilder.buildAutoChooser("mainshoot");
         SmartDashboard.putData("Auto Chooser", autoChooser);
         
 
@@ -74,7 +73,7 @@ public class RobotContainer {
         
 
         
-        SmartDashboard.putBoolean("PivotIn Exist", NamedCommands.hasCommand("PivotIn"));
+        
     }
 
            //NEED FIX FOR AUTO (prolly not even java land copy past from youtube source geoffsmchit pathplanner2023Overveiw) not done leave early bye bye
@@ -88,36 +87,24 @@ public class RobotContainer {
 
     private void configureCommands () {
        
+
+
+
             this.swerve.setDefaultCommand(new Drive(
                 this.swerve, 
                 () -> MathUtil.applyDeadband(-this.driverOne.getHID().getLeftY(), Constants.SwerveConstants.TRANSLATION_DEADBAND),
                 () -> MathUtil.applyDeadband(-this.driverOne.getHID().getLeftX(), Constants.SwerveConstants.TRANSLATION_DEADBAND), 
                 () -> MathUtil.applyDeadband(this.driverOne.getHID().getRightX(), Constants.SwerveConstants.OMEGA_DEADBAND), 
-                () -> this.driverOne.getHID().getPOV()
+                () -> this.driverOne.getHID().getPOV(),
+                () -> this.driverOne.getHID().getLeftBumper(),
+                () -> this.driverOne.getHID().getAButtonReleased()
         ));
-         
-        
-
-
 
         this.driverOne.x().onTrue(new InstantCommand(this.swerve::zeroGyro, this.swerve));
-        this.driverOne.leftBumper().whileTrue(new RepeatCommand(new InstantCommand(this.swerve::lock, this.swerve)));
+        this.driverOne.rightBumper().whileTrue(new RepeatCommand(new InstantCommand(this.swerve::lock, this.swerve)));
 
-        /**
-        this.driverOne.leftTrigger().whileTrue(this.swerve.getDriveSysidRoutine());
-        this.driverOne.rightTrigger().whileTrue(this.swerve.getAngleSysidRoutine());
-        */
     }
-    //TODO: add auto path
-    //orig:
-    //public Command getAutonomousCommand () { return this.swerve.getAutonomousCommand(); }
-    //new
-    //public Command getAutonomousCommand () { return autoChooser.getSelected(); }
-    /*
-     * public Command getAutonomousCommand() {
-        PathPlannerPath path = PathPlannerPath.fromPathFile("line");
-        return AutoBuilder.followPath(path);
-     */
+
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
     }

@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Climb extends SubsystemBase{
 
-    private final PWMVictorSPX climbMotor1 = new PWMVictorSPX(3);//Ids not determined
+    private final PWMVictorSPX climbMotor1 = new PWMVictorSPX(2);//Ids not determined
 	private final PWMVictorSPX climbMotor2 = new PWMVictorSPX(4);//Ids not determined
 
     public Climb() {

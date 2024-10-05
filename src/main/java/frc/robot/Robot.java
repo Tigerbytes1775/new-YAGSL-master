@@ -22,6 +22,7 @@ import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Launch;
 import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Swerve;
 import frc.robot.util.Alerts;
 import frc.robot.util.BuildConstants;
 import frc.robot.util.Constants;
@@ -49,6 +50,7 @@ public class Robot extends TimedRobot {
 	Pivot pivot;
 	Intake intake;
 	Climb climb;
+	Swerve swerve;
 
 	Command AutomousCommand;
 
@@ -66,15 +68,15 @@ public class Robot extends TimedRobot {
 
 	
 
-	private final double intakeOutput = 0.50;
+	private final double intakeOutput = 0.70;
 	
 	private final double speakerPower = 1;
-	private final double ampPower = 0.46;//was .475 at comp
+	private final double ampPower = 0.475;//was .41 at comp
 	private final double reversePower = -0.15;
 	private double rollerPower = 0;
 	private boolean launchOn = false;
 
-	private final double climbPower = 0.75;
+	private final double climbPower = 1;
  
 	//function to set the arm output power in the vertical direction
 	
@@ -103,6 +105,7 @@ public class Robot extends TimedRobot {
 		pivot = robotContainer.pivot;
 		intake = robotContainer.intake;
 		climb = robotContainer.climb;
+	
 
 		Shuffleboard.getTab("Autonomous").add("Command Scheduler", CommandScheduler.getInstance());
 
@@ -166,7 +169,7 @@ public class Robot extends TimedRobot {
 
 			double pivotPower = commandsController.getLeftY();
 			 
-			if(commandsController.getLeftBumperPressed()) {
+			if(commandsController.getLeftBumper()) {
 
 			pivotPower *= fastPivotMultiplier;
 

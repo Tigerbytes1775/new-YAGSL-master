@@ -3,9 +3,9 @@
     "front": -10.875,
     "left": 10.875
   },
-  "absoluteEncoderOffset": 127.08972,
+  "absoluteEncoderOffset": 127.881,
   "drive": {
-    "type": "sparkmax",
+    "type": "sparkmax", 
     "id": 17,
     "canbus": "rio"
   },

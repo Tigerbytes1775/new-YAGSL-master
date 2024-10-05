@@ -4,7 +4,10 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+
+import java.util.function.BooleanSupplier;
 
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.Constants;
@@ -15,12 +18,17 @@ public class Drive extends Command {
     private final Swerve swerve;
     private final DoubleSupplier vx, vy;
     private final DoubleSupplier omega, headingLock;
+    private final BooleanSupplier isSlowMode;
+    private final BooleanSupplier resetGyro;
+    
 
 
 
-    public Drive (Swerve swerve, DoubleSupplier vx, DoubleSupplier vy, DoubleSupplier omega, DoubleSupplier headingLock) {
+    public Drive (Swerve swerve, DoubleSupplier vx, DoubleSupplier vy, DoubleSupplier omega, DoubleSupplier headingLock, 
+BooleanSupplier isSlowMode, BooleanSupplier resetGyro) {
 
         this.swerve = swerve;
+        this.resetGyro = resetGyro;
 
         this.vx = vx;
         this.vy = vy;
@@ -28,14 +36,30 @@ public class Drive extends Command {
         this.omega = omega;
         this.headingLock = headingLock;
 
+        this.isSlowMode = isSlowMode;
+
         this.addRequirements(this.swerve);
     }
 
     @Override
     public void execute () {
 
+        
+
         double vx = this.vx.getAsDouble();
         double vy = this.vy.getAsDouble();
+        boolean isSlowMode = this.isSlowMode.getAsBoolean();
+        boolean resetGyro = this.resetGyro.getAsBoolean();
+
+        if(isSlowMode) {
+            vx *= 0.15;
+            vy *= 0.15;
+        }
+        
+        if(resetGyro) {
+            swerve.zeroGyroFliped();
+        }
+
         double rx, ry;
 
         if (Math.abs(vx) == Math.abs(vy)) { 
@@ -54,8 +78,11 @@ public class Drive extends Command {
         }
 
         double power = Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2));
+        
         vx = rx * power;
         vy = ry * power;
+
+        
 
         Translation2d translation = new Translation2d(vx, vy);
         translation = SwerveMath.limitVelocity(
@@ -80,8 +107,16 @@ public class Drive extends Command {
             return;
         }
        
-            double omega = -this.omega.getAsDouble() * Constants.SwerveConstants.TURN_CONSTANT * Constants.SwerveConstants.MAX_STEER_SPEED;        
-            this.swerve.driveAngularVelocity(translation.times(Constants.SwerveConstants.MAX_DRIVE_SPEED), omega);
+            double omega = -this.omega.getAsDouble() * Constants.SwerveConstants.TURN_CONSTANT * Constants.SwerveConstants.MAX_STEER_SPEED; 
+        
+            
+                this.swerve.driveAngularVelocity(translation.times(Constants.SwerveConstants.MAX_DRIVE_SPEED), omega);
+            
+           
+
+            
+
+            
 
         
     }

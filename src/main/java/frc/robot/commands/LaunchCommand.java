@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Launch;
 
@@ -27,6 +28,7 @@ public class LaunchCommand extends Command {
         launch.setMotors(percent);
 		timer.reset();
 		timer.start();
+
 		
 	}
 
@@ -39,13 +41,13 @@ public class LaunchCommand extends Command {
 	@Override
 	public boolean isFinished()
 	{
-		return timer.get() < commandTime;
+		return timer.get() > commandTime;
 	}
 
 	@Override
 	public void end(boolean interrupted)
 	{
-		launch.setMotors(0);
+		//launch.setMotors(0);
 	}
 
 

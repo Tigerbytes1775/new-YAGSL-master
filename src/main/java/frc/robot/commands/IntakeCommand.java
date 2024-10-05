@@ -41,14 +41,14 @@ public class IntakeCommand extends Command {
 	@Override
 	public void end(boolean interrupted) {
 
-		intake.setMotors(0);
+		//intake.setMotors(0);
 
 	}
 
 	@Override
 	public boolean isFinished() {
 		
-		return timer.get() < commandTime;
+		return timer.get() > commandTime;
 	}
 
 

@@ -33,6 +33,7 @@ import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
+
 public class Swerve extends SubsystemBase {
     
     private final SwerveDrive swerveDrive;
@@ -41,7 +42,7 @@ public class Swerve extends SubsystemBase {
 
     public Swerve () throws IOException {
 
-        SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+        SwerveDriveTelemetry.verbosity = TelemetryVerbosity.NONE;
         File swerveConfigurationDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
         this.swerveDrive = new SwerveParser(swerveConfigurationDirectory).createSwerveDrive(Constants.SwerveConstants.MAX_DRIVE_SPEED);
         
@@ -150,6 +151,21 @@ public class Swerve extends SubsystemBase {
 
         Translation2d translation = this.getPose().getTranslation();
         Rotation2d rotation = new Rotation2d();
+        SmartDashboard.putBoolean("Gyro Reset", true);
+        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
+
+            Rotation2d allianceOriented = Rotation2d.fromDegrees(180);
+            rotation = rotation.plus(allianceOriented); 
+        }
+
+        this.resetOdometry(new Pose2d(translation, rotation));
+    }
+
+    public void zeroGyroFliped() { 
+
+        Translation2d translation = this.getPose().getTranslation();
+        Rotation2d rotation = new Rotation2d();
+        SmartDashboard.putBoolean("Gyro Reset", true);
 
         if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
 
