@@ -1,30 +1,23 @@
 package frc.robot.commands.Teleop;
 
 import java.util.function.BooleanSupplier;
-
-import edu.wpi.first.networktables.BooleanSubscriber;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Launch;
 
+
 public class TeleopLaunchCommand extends Command {
 
-	private final double ampPower = 0.475;
-	private final double speakerPower = 1;
-
-	private Launch launch;
-	private boolean aButton;
-	private boolean bButton;
+	private final Launch launch;
+	private final boolean aButton;
+	private final boolean bButton;
 
 	private boolean launchOn = false;
-
-
-
+	private double launchPower;
     
     public TeleopLaunchCommand(Launch launch, BooleanSupplier aButton, BooleanSupplier bButton) {
 
 		addRequirements(launch);
+		this.launch = launch;
 		this.aButton = aButton.getAsBoolean();
 		this.bButton = bButton.getAsBoolean();
 		
@@ -34,14 +27,15 @@ public class TeleopLaunchCommand extends Command {
 	public void execute()
 	{
 		if(aButton) {
-			launch.setMotors(speakerPower);
+			launchPower = 1;
 			launchOn = !launchOn;
 		} else if(bButton) {
-			launch.setMotors(ampPower);
+			launchPower = 0.475;
 			launchOn = !launchOn;
 		}
+		this.launch.setMotors(launchPower);
 	}
 
-
-
+	@Override
+    public boolean isFinished () { return false; }
 }

@@ -21,6 +21,18 @@ public final class Constants {
         public static final List<Matter> WEIGHT_DISTRIBUTION = List.of(BASE, BATTERY, BUMPERS);
     }
 
+    public final class MechConstants {
+
+        public static final double MECH_DEADBAND = 0.0825;
+
+        public static final double AMP_POWER = 0.475;
+	    public static final double SPEAKER_POWER = 1;
+
+        public static final double PIVOT_SPEED_MULTIPLIER = 0.35;
+        public static final double FAST_PIVOT_SPEED_MULTIPLIER = 0.6;
+
+    }
+
     public final class SwerveConstants {
 
         private static final int FREE_SPEED = 5676; // Motor Free Speed [RPM]

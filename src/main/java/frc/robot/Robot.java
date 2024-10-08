@@ -63,18 +63,15 @@ public class Robot extends TimedRobot {
 
 	
 
-	private final double pivotMultiplier = 0.35;
-	private final double fastPivotMultiplier = 0.6;
+	//private final double pivotMultiplier = 0.35;
+	//private final double fastPivotMultiplier = 0.6;
 
 	
 
 	private final double intakeOutput = 0.70;
 	
-	private final double speakerPower = 1;
-	private final double ampPower = 0.475;//was .41 at comp
-	private final double reversePower = -0.15;
-	private double rollerPower = 0;
-	private boolean launchOn = false;
+	//private double rollerPower = 0;
+
 
 	private final double climbPower = 1;
  
@@ -101,8 +98,8 @@ public class Robot extends TimedRobot {
 
 		this.robotContainer = new RobotContainer();
 		this.disabledTimer = new Timer();
-		launch = robotContainer.launch;
-		pivot = robotContainer.pivot;
+		//launch = robotContainer.launch;
+		//pivot = robotContainer.pivot;
 		intake = robotContainer.intake;
 		climb = robotContainer.climb;
 	
@@ -161,9 +158,9 @@ public class Robot extends TimedRobot {
 		//setIntakeMotor(intakePower);
 		 intake.setMotors(intakePower);
 
+	
 		
-		
-		
+		/* 
 		SmartDashboard.putBoolean("Left Bumper", commandsController.getLeftBumperPressed());
 		if(Math.abs(commandsController.getLeftY()) > 0.0825) {
 
@@ -185,44 +182,7 @@ public class Robot extends TimedRobot {
 
 			pivot.setMotors(0);
 		}
-	 	
-		
-		
-		
-		
-		if(commandsController.getAButtonReleased()) {
-			rollerPower = speakerPower;
-			if(launchOn) {
-				launchOn = false;
-			} else {
-				launchOn = true;
-			}
-		} else if(commandsController.getBButtonReleased()) {
-			rollerPower = ampPower;
-			if(launchOn) {
-				launchOn = false;
-			} else {
-				launchOn = true;
-			}
-		}
-		
-		if(commandsController.getXButton()) {
-			
-			launch.setMotors(reversePower);
-		} else if(launchOn) {
-
-			commandsController.setRumble(RumbleType.kBothRumble, 0.1);
-			launch.setMotors(rollerPower);
-		} else {
-			rollerPower = 0;
-			commandsController.setRumble(RumbleType.kBothRumble, 0);
-			launch.setMotors(rollerPower);
-		}
-		
-		
-	
-		
-		
+		*/
 		
 		if(driveController.getRightTriggerAxis() > 0.0825) {
 			climb.setMotors(-climbPower);
@@ -233,7 +193,7 @@ public class Robot extends TimedRobot {
 		}
 		
 	}
-
+	
 	@Override
 	public void disabledInit () {
 
