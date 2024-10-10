@@ -31,14 +31,15 @@ import frc.robot.util.Constants;
 public class RobotContainer {
 
     private final SendableChooser<Command> autoChooser;
-    Swerve swerve;
+    
     private Controller driverOne;
     private XboxController MechDriver;
 
-    public Pivot pivot = new Pivot();
-    public Launch launch = new Launch();
-    public Intake intake = new Intake();
-    public Climb climb = new Climb();
+    Swerve swerve;
+    Pivot pivot;
+    Launch launch;
+    Intake intake;
+    Climb climb;
 
     public RobotContainer() {
         //testing new auto call
@@ -64,6 +65,11 @@ public class RobotContainer {
         try { this.swerve = new Swerve(); } 
         catch (IOException ioException) { Alerts.swerveInitialized.set(true); }
 
+        this.pivot = new Pivot();
+        this.launch = new Launch();
+        this.intake = new Intake();
+        this.climb = new Climb();
+        
         this.driverOne = new Controller(0);
         this.MechDriver = new XboxController(1);
 
