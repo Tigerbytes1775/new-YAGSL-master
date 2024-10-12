@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
@@ -15,8 +14,8 @@ public class Pivot extends SubsystemBase {
     public Pivot() {
 
         pivotMotor.setInverted(true);
-		pivotMotor.setIdleMode(IdleMode.kBrake);
-		pivotMotor.setSmartCurrentLimit(20);
+		//pivotMotor.setIdleMode(IdleMode.kBrake);
+		//pivotMotor.setSmartCurrentLimit(20);
 		((CANSparkMax) pivotMotor).burnFlash();
 
 		// limit the direction of the arm's rotations (kReverse = up)
@@ -29,6 +28,7 @@ public class Pivot extends SubsystemBase {
 
 		pivotMotor.set(percent);
 		SmartDashboard.putNumber("Pivot power(%)", percent);
+
 
         //if(percent == 0) {
 

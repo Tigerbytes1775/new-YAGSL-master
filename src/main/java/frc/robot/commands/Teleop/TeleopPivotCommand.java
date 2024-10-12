@@ -30,6 +30,8 @@ public class TeleopPivotCommand extends Command {
 	@Override
 	public void execute() {
 
+	
+
 		boolean leftBumper = this.leftBumper.getAsBoolean();
 		double leftY = this.leftY.getAsDouble();
 

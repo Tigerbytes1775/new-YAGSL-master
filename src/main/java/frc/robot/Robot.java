@@ -1,32 +1,17 @@
 package frc.robot;
 
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.pathplanner.lib.auto.CommandUtil;
-import com.revrobotics.CANSparkMax;
-//import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkBase.SoftLimitDirection;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.motorcontrol.PWMVictorSPX;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.lib.Controller;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Launch;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.Alerts;
-import frc.robot.util.BuildConstants;
 import frc.robot.util.Constants;
-import java.lang.Math;
 
 
 
@@ -39,18 +24,16 @@ import java.lang.Math;
 
 public class Robot extends TimedRobot {
 
-	private final XboxController commandsController = new XboxController(1);
-	private final XboxController driveController = new XboxController(0);
+	//private final XboxController commandsController = new XboxController(1);
+	//private final XboxController driveController = new XboxController(0);
 
 	private RobotContainer robotContainer;
 	private Command autonomousCommand;
 	private Timer disabledTimer;
-	
-	Launch launch;
-	Pivot pivot;
-	Intake intake;
-	Climb climb;
-	Swerve swerve;
+	//Pivot pivot;
+	//Intake intake;
+	//Climb climb;
+	//Swerve swerve;
 
 	Command AutomousCommand;
 
@@ -68,12 +51,12 @@ public class Robot extends TimedRobot {
 
 	
 
-	private final double intakeOutput = 0.70;
+	//private final double intakeOutput = 0.70;
 	
 	//private double rollerPower = 0;
 
 
-	private final double climbPower = 1;
+	//private final double climbPower = 1;
  
 	//function to set the arm output power in the vertical direction
 	
@@ -94,14 +77,14 @@ public class Robot extends TimedRobot {
 	public void robotInit () {
 
 		// if bug with directly below, ignore and build
-		if (BuildConstants.DIRTY == 1) { Alerts.versionControl.set(true); }
+		Alerts.versionControl.set(true); 
 
 		this.robotContainer = new RobotContainer();
 		this.disabledTimer = new Timer();
 		//launch = robotContainer.launch;
 		//pivot = robotContainer.pivot;
-		intake = robotContainer.intake;
-		climb = robotContainer.climb;
+		//intake = robotContainer.intake;
+		//climb = robotContainer.climb;
 	
 
 		Shuffleboard.getTab("Autonomous").add("Command Scheduler", CommandScheduler.getInstance());
@@ -137,7 +120,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopPeriodic () {
-		//Code for the arm
+		/*//Code for the arm
 		double intakePower;
 
 		// motion for the arm in the horizontal direction
@@ -160,29 +143,29 @@ public class Robot extends TimedRobot {
 
 	
 		
-		/* 
-		SmartDashboard.putBoolean("Left Bumper", commandsController.getLeftBumperPressed());
+		
+		
 		if(Math.abs(commandsController.getLeftY()) > 0.0825) {
 
 			double pivotPower = commandsController.getLeftY();
 			 
 			if(commandsController.getLeftBumper()) {
 
-			pivotPower *= fastPivotMultiplier;
+			//pivotPower *= fastPivotMultiplier;
 
 			} else {
 
-			pivotPower *= pivotMultiplier;
+			//pivotPower *= pivotMultiplier;
 
 			}
 
-			pivot.setMotors(pivotPower);
+			//pivot.setMotors(pivotPower);
 
 		} else {
 
-			pivot.setMotors(0);
+			//pivot.setMotors(0);
 		}
-		*/
+		
 		
 		if(driveController.getRightTriggerAxis() > 0.0825) {
 			climb.setMotors(-climbPower);
@@ -197,11 +180,9 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledInit () {
 
-		pivot.setMotors(0);
-		launch.setMotors(0);
 		intake.setMotors(0);
 		this.disabledTimer.reset();
-		this.disabledTimer.start();
+		this.disabledTimer.start();*/
 	}
 
 	@Override

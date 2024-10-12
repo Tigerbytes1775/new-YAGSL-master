@@ -26,6 +26,8 @@ public class TeleopLaunchCommand extends Command {
 	@Override
 	public void execute()
 	{
+		
+
 		if(aButton) {
 			launchPower = 1;
 			launchOn = !launchOn;
@@ -34,6 +36,7 @@ public class TeleopLaunchCommand extends Command {
 			launchOn = !launchOn;
 		}
 		this.launch.setMotors(launchPower);
+		
 	}
 
 	@Override

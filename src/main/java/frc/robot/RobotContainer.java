@@ -18,6 +18,8 @@ import frc.robot.commands.Auto.LaunchCommand;
 import frc.robot.commands.Auto.PivotCommand;
 import frc.robot.commands.Teleop.TeleopLaunchCommand;
 import frc.robot.commands.Teleop.TeleopPivotCommand;
+import frc.robot.commands.Teleop.TeleopClimbCommand;
+import frc.robot.commands.Teleop.TeleopIntakeCommand;
 import frc.robot.commands.swerve.BrakeMode;
 import frc.robot.commands.swerve.Drive;
 import frc.robot.subsystems.Climb;
@@ -118,6 +120,18 @@ public class RobotContainer {
             //() -> this.MechDriver.getLeftY(),
             () -> MathUtil.applyDeadband(this.MechDriver.getLeftY(), Constants.SwerveConstants.TRANSLATION_DEADBAND),
             () -> this.MechDriver.getLeftBumper()
+        ));
+
+        this.intake.setDefaultCommand(new TeleopIntakeCommand(
+            this.intake,
+            () -> MathUtil.applyDeadband(this.MechDriver.getLeftTriggerAxis(), Constants.SwerveConstants.TRANSLATION_DEADBAND) != 0,
+            () -> MathUtil.applyDeadband(this.MechDriver.getRightTriggerAxis(), Constants.SwerveConstants.TRANSLATION_DEADBAND) != 0
+        ));
+
+        this.climb.setDefaultCommand(new TeleopClimbCommand(
+            this.climb,
+            () -> MathUtil.applyDeadband(this.MechDriver.getLeftTriggerAxis(), Constants.SwerveConstants.TRANSLATION_DEADBAND) != 0,
+            () -> MathUtil.applyDeadband(this.MechDriver.getRightTriggerAxis(), Constants.SwerveConstants.TRANSLATION_DEADBAND) != 0
         ));
 
     }
