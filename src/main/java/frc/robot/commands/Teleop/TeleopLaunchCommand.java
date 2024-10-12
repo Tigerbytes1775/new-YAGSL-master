@@ -8,8 +8,8 @@ import frc.robot.subsystems.Launch;
 public class TeleopLaunchCommand extends Command {
 
 	private final Launch launch;
-	private final boolean aButton;
-	private final boolean bButton;
+	private final BooleanSupplier aButton;
+	private final BooleanSupplier bButton;
 
 	private boolean launchOn = false;
 	private double launchPower;
@@ -18,16 +18,17 @@ public class TeleopLaunchCommand extends Command {
 
 		addRequirements(launch);
 		this.launch = launch;
-		this.aButton = aButton.getAsBoolean();
-		this.bButton = bButton.getAsBoolean();
+		this.aButton = aButton;
+		this.bButton = bButton;
 		
 	}
 
 	@Override
 	public void execute()
 	{
+		boolean aButton = this.aButton.getAsBoolean();
+		boolean bButton = this.bButton.getAsBoolean();
 		
-
 		if(aButton) {
 			launchPower = 1;
 			launchOn = !launchOn;
@@ -35,7 +36,9 @@ public class TeleopLaunchCommand extends Command {
 			launchPower = 0.475;
 			launchOn = !launchOn;
 		}
-		this.launch.setMotors(launchPower);
+		//if launch on set power to launch power else set to 0
+		this.launch.setMotors(launchOn ? launchPower : 0);
+		
 		
 	}
 

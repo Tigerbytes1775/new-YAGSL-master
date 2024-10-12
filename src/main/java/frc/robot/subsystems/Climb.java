@@ -16,7 +16,7 @@ public class Climb extends SubsystemBase{
     public void setMotors(double percent) {
 		climbMotor1.set(percent);
 		climbMotor2.set(percent);
-		SmartDashboard.putNumber("ClimbPower power(%)", percent);
+		SmartDashboard.putNumber("Climb power(%)", percent);
 		if(percent == 0) {
 
 			climbMotor1.stopMotor();

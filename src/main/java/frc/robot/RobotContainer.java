@@ -49,6 +49,11 @@ public class RobotContainer {
             //return new PathPlannerAuto();
         //}
 
+        this.pivot = new Pivot();
+        this.launch = new Launch();
+        this.intake = new Intake();
+        this.climb = new Climb();
+
         NamedCommands.registerCommand("LaunchSpeaker", new LaunchCommand(launch, 3, 1));
         NamedCommands.registerCommand("LaunchAmp", new LaunchCommand(launch, 3, 0.3));//should be 0.46
         NamedCommands.registerCommand("LaunchOff", new LaunchCommand(launch, 0.1, 0));
@@ -67,10 +72,7 @@ public class RobotContainer {
         try { this.swerve = new Swerve(); } 
         catch (IOException ioException) { Alerts.swerveInitialized.set(true); }
 
-        this.pivot = new Pivot();
-        this.launch = new Launch();
-        this.intake = new Intake();
-        this.climb = new Climb();
+        
         
         this.driverOne = new Controller(0);
         this.MechDriver = new XboxController(1);
@@ -123,7 +125,6 @@ public class RobotContainer {
 
         this.pivot.setDefaultCommand(new TeleopPivotCommand(
             this.pivot,
-            //() -> this.MechDriver.getLeftY(),
             () -> MathUtil.applyDeadband(this.MechDriver.getLeftY(), Constants.SwerveConstants.TRANSLATION_DEADBAND),
             () -> this.MechDriver.getLeftBumper()
         ));
@@ -136,8 +137,8 @@ public class RobotContainer {
 
         this.climb.setDefaultCommand(new TeleopClimbCommand(
             this.climb,
-            () -> MathUtil.applyDeadband(this.MechDriver.getLeftTriggerAxis(), Constants.SwerveConstants.TRANSLATION_DEADBAND) != 0,
-            () -> MathUtil.applyDeadband(this.MechDriver.getRightTriggerAxis(), Constants.SwerveConstants.TRANSLATION_DEADBAND) != 0
+            () -> MathUtil.applyDeadband(this.driverOne.getLeftTriggerAxis(), Constants.SwerveConstants.TRANSLATION_DEADBAND) != 0,
+            () -> MathUtil.applyDeadband(this.driverOne.getRightTriggerAxis(), Constants.SwerveConstants.TRANSLATION_DEADBAND) != 0
         ));
 
     }
