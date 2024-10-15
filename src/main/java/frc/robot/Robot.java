@@ -1,15 +1,11 @@
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.Climb;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Pivot;
-import frc.robot.subsystems.Swerve;
 import frc.robot.util.Alerts;
 import frc.robot.util.Constants;
 
@@ -78,6 +74,7 @@ public class Robot extends TimedRobot {
 
 		// if bug with directly below, ignore and build
 		Alerts.versionControl.set(true); 
+		CameraServer.startAutomaticCapture();
 
 		this.robotContainer = new RobotContainer();
 		this.disabledTimer = new Timer();
