@@ -26,18 +26,9 @@ public class Pivot extends SubsystemBase {
     }
 
     public void setMotors(double percent) {
-
 		pivotMotor.set(percent);
 		SmartDashboard.putNumber("Pivot power(%)", percent);
-		SmartDashboard.putNumber("Pivot motor: ", pivotMotor.get());
-
-
-        //if(percent == 0) {
-
-          //  pivotMotor.stopMotor();
-
-        //}
-
+		
 	}
 
 

@@ -14,8 +14,6 @@ public class TeleopPivotCommand extends Command {
 	private Pivot pivot;
 	private DoubleSupplier leftY;
 	private BooleanSupplier leftBumper;
-	
-	private double pivotPower = 0;
     
     public TeleopPivotCommand(Pivot pivot, DoubleSupplier leftY, BooleanSupplier leftBumper) {
 		this.pivot = pivot;
@@ -23,25 +21,15 @@ public class TeleopPivotCommand extends Command {
 		this.leftBumper = leftBumper;
 		addRequirements(pivot);
 
-		
-		
 	}
 
 	@Override
 	public void execute() {
 
-	
-
 		boolean leftBumper = this.leftBumper.getAsBoolean();
 		double leftY = this.leftY.getAsDouble();
 
-		
-		if(leftBumper) {
-			pivotPower = leftY * 0.6;
-		} else {
-			pivotPower = leftY * 0.35;
-		}
-		this.pivot.setMotors(pivotPower);
+		this.pivot.setMotors(leftY  * (leftBumper ? 0.6 : 0.35));
 	}
 
 	@Override
