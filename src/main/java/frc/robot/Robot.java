@@ -74,7 +74,6 @@ public class Robot extends TimedRobot {
 
 		// if bug with directly below, ignore and build
 		Alerts.versionControl.set(true); 
-		CameraServer.startAutomaticCapture();
 
 		this.robotContainer = new RobotContainer();
 		this.disabledTimer = new Timer();

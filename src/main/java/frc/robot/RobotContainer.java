@@ -15,9 +15,8 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import frc.lib.Controller;
 import frc.robot.commands.Auto.IntakeCommand;
 import frc.robot.commands.Auto.LaunchCommand;
-import frc.robot.commands.Auto.PivotCommand;
 import frc.robot.commands.Teleop.TeleopLaunchCommand;
-import frc.robot.commands.Teleop.TeleopPivotCommand;
+
 import frc.robot.commands.Teleop.TeleopClimbCommand;
 import frc.robot.commands.Teleop.TeleopIntakeCommand;
 import frc.robot.commands.swerve.BrakeMode;
@@ -25,7 +24,7 @@ import frc.robot.commands.swerve.Drive;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Launch;
-import frc.robot.subsystems.Pivot;
+
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.Alerts;
 import frc.robot.util.Constants;
@@ -38,7 +37,7 @@ public class RobotContainer {
     private XboxController MechDriver;
 
     Swerve swerve;
-    Pivot pivot;
+
     Launch launch;
     Intake intake;
     Climb climb;
@@ -49,7 +48,7 @@ public class RobotContainer {
             //return new PathPlannerAuto();
         //}
 
-        this.pivot = new Pivot();
+
         this.launch = new Launch();
         this.intake = new Intake();
         this.climb = new Climb();
@@ -57,10 +56,6 @@ public class RobotContainer {
         NamedCommands.registerCommand("LaunchSpeaker", new LaunchCommand(launch, 3, 1));
         NamedCommands.registerCommand("LaunchAmp", new LaunchCommand(launch, 3, 0.3));//should be 0.46
         NamedCommands.registerCommand("LaunchOff", new LaunchCommand(launch, 0.1, 0));
-
-        NamedCommands.registerCommand("PivotIn", new PivotCommand(pivot, 2.5, 0.35));
-        NamedCommands.registerCommand("PivotOut", new PivotCommand(pivot, 2.5,-0.35));
-        NamedCommands.registerCommand("PivotOff", new PivotCommand(pivot, 0.1, 0));
 
         NamedCommands.registerCommand("IntakeIn", new IntakeCommand(intake, 0.75, -0.5));
         NamedCommands.registerCommand("IntakeOut", new IntakeCommand(intake, 0.75, 0.5));
@@ -123,11 +118,7 @@ public class RobotContainer {
             () -> this.MechDriver.getBButtonReleased()                
         ));
 
-        this.pivot.setDefaultCommand(new TeleopPivotCommand(
-            this.pivot,
-            () -> MathUtil.applyDeadband(this.MechDriver.getLeftY(), Constants.SwerveConstants.TRANSLATION_DEADBAND),
-            () -> this.MechDriver.getLeftBumper()
-        ));
+        
 
         this.intake.setDefaultCommand(new TeleopIntakeCommand(
             this.intake,
